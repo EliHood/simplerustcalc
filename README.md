@@ -1,1 +1,1 @@
-### Simple Russt Calculator
+### Simple Rust Calculator
