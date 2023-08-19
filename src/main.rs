@@ -39,24 +39,40 @@ fn calc(operation: fn(num1: i32, num2: i32) -> i32) -> i32 {
     return operation(parsed_numb1, parsed_numb2);
 }
 
+#[derive(Debug)]
+pub enum OurCalc {
+    Add,
+    Subtract,
+    Multiply,
+    Divide,
+}
+#[derive(Debug)]
+struct InputError;
+impl OurCalc {
+    fn from_str(s: &str) -> Result<OurCalc, InputError> {
+        match s {
+            "add" => Ok(OurCalc::Add),
+            "substract" => Ok(OurCalc::Subtract),
+            "multiply" => Ok(OurCalc::Multiply),
+            "divide" => Ok(OurCalc::Divide),
+            _ => Err(InputError),
+        }
+    }
+}
+
+fn match_calc(our_calc: OurCalc) -> i32 {
+    match our_calc {
+        OurCalc::Add => calc(add),
+        OurCalc::Subtract => calc(subtract),
+        OurCalc::Multiply => calc(multiply),
+        OurCalc::Divide => calc(divide),
+    }
+}
+
 fn main() {
     let mut input_string = String::new();
     println!("Enter either add, substract, multiply, or divide:");
     io::stdin().read_line(&mut input_string).unwrap();
-
-    match input_string.as_str().trim() {
-        "add" => {
-            calc(add);
-        }
-        "subtract" => {
-            calc(subtract);
-        }
-        "multiply" => {
-            calc(multiply);
-        }
-        "divide" => {
-            calc(divide);
-        } //
-        c => println!("Invalid command: {c}"),
-    }
+    let calc = OurCalc::from_str(&input_string.trim()).unwrap();
+    match_calc(calc);
 }
